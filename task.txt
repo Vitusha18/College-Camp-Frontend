@@ -1,0 +1,17 @@
+Research - done
+Frontend pages (in progress)
+ -Landing page
+ -Login/Register
+ -Student Dashboard
+  --Dashboard
+  --Internships
+  --Scholarships
+  --Study planner
+  --Notifications
+  --Profile
+  --
+ -Admin Dashboard
+  --Enrolled Student
+  --Manage Internships
+  --Manage Scholarships
+  
