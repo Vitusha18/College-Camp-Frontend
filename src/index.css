@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 @theme {
+  --font-family: "Plus Jakarta Sans", sans-serif;
   --color-background-custom: #f8faff;
   --color-text-custom: #1e293b;
 }
@@ -12,3 +13,28 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+@import "tailwindcss";
+
+@theme {
+  --color-background-custom: #f8faff;
+  --color-text-custom: #1e293b;
+}
+
+#root {
+  width: 100%;
+  min-height: 100%;
+}
+* {
+  margin: 10;
+  padding: 3;
+  
+}
+
+body {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  background-color: var(--color-background-custom);
+  color: var(--color-text-custom);
+  font-family: sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+} 

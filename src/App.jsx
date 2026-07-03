@@ -1,22 +1,46 @@
-import React from 'react';
-import Navbar from './components/navbar';
-import Hero from './components/Hero';
-import Features from './components/Feature';
-import WhyChooseUs from './components/WhyChooseUs';
-import CtaBanner from './components/Cta';
-import Footer from './components/Footer';
+// import React from "react";
+// import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+// import Home from "./pages/Home";
+// import Register from "./components/Register";
+
+// export default function App() {
+//   return (
+//     <Router>
+//       <Routes>
+//         <Route path="/" element={<Home />} />
+//         <Route path="/register" element={<Register />} />
+
+//       </Routes>
+//     </Router>
+//   );
+// }
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+
+import Home from "./pages/Home";
+// import Register from "./components/Register";
+// import Login from "./components/Login";
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-[#f8fafc] text-gray-900 font-sans">
+    <Router>
+
       <Navbar />
-      <Hero />
-      <hr className="border-gray-100" />
-      <Features />
-      <hr className="border-gray-100" />
-      <WhyChooseUs />
-      <CtaBanner />
+
+      <main className="min-h-screen">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          {/* <Route path="/register" element={<Register />} /> */}
+          {/* <Route path="/login" element={<Login />} /> */}
+        </Routes>
+      </main>
+
       <Footer />
-    </div>
+
+    </Router>
   );
 }
