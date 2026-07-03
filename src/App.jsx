@@ -1,32 +1,22 @@
 import React from 'react';
-// 1. Import all your individual components
 import Navbar from './components/navbar';
-import HeroSection from './components/Hero';
+import Hero from './components/Hero';
 import Features from './components/Feature';
-import WhyChooseUs from './components/Why Choose us';
-import CTA from './components/Cta';
+import WhyChooseUs from './components/WhyChooseUs';
+import CtaBanner from './components/Cta';
 import Footer from './components/Footer';
 
-function App() {
+export default function App() {
   return (
-    // min-h-screen ensures the background stretches to full height, 
-    // and bg-white (or any color) keeps a clean canvas.
-    <div className="min-h-screen bg-white text-gray-900 antialiased">
-      
-      {/* 2. Stack them vertically in order */}
+    <div className="min-h-screen bg-[#f8fafc] text-gray-900 font-sans">
       <Navbar />
-      
-      <main>
-        <HeroSection />
-        <Features />
-        <WhyChooseUs />
-        <CTA />
-      </main>
-      
+      <Hero />
+      <hr className="border-gray-100" />
+      <Features />
+      <hr className="border-gray-100" />
+      <WhyChooseUs />
+      <CtaBanner />
       <Footer />
-
     </div>
   );
 }
-
-export default App;

@@ -1,28 +1,28 @@
 import React from 'react';
-import Button from './Button';
-import { GraduationCap } from 'lucide-react';
+import Logo from './Logo';     // 👈 Look right here in the same folder for Logo.jsx
+import Button from "./Button"; // 👈 Step OUT of components to find Button.jsx in src/
 
 export default function Navbar() {
   return (
-    <nav className='flex items-center justify-between px-8 md:px-16 py-4 bg-white border-b border-gray-100 max-w-7xl mx-auto w-full'>
-      {/* Logo */}
-      <div className='flex items-center gap-2 text-blue-600 font-bold text-xl'>
-        <GraduationCap className='w-7 h-7' />
-        <span>Campus Connect</span>
+    <header className="sticky top-0 z-50 bg-[#f8fafc]/90 backdrop-blur-md border-b border-slate-100 font-sans">
+      <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+        
+        {/* Render your brand new Logo component here */}
+        <Logo />
+        
+        {/* Navigation Links */}
+        <nav className="hidden md:flex items-center gap-10 text-sm font-semibold text-slate-600">
+          <a href="#home" className="hover:text-[#2563eb] transition-colors">Home</a>
+          <a href="#features" className="hover:text-[#2563eb] transition-colors">Features</a>
+          <a href="#about" className="hover:text-[#2563eb] transition-colors">About</a>
+          <a href="#contact" className="hover:text-[#2563eb] transition-colors">Contact</a>
+        </nav>
+        
+        {/* Action Button */}
+        <Button className="bg-[#2563eb] text-white px-7 py-2 rounded-full text-sm font-semibold hover:bg-blue-700 shadow-sm">
+          Log In
+        </Button>
       </div>
-
-      {/* Nav Links */}
-      <div className='hidden md:flex items-center gap-8 text-gray-600 text-sm font-medium'>
-        <a href='#home' className='hover:text-blue-600 transition-colors'>Home</a>
-        <a href='#features' className='hover:text-blue-600 transition-colors'>Features</a>
-        <a href='#about' className='hover:text-blue-600 transition-colors'>About</a>
-        <a href='#contact' className='hover:text-blue-600 transition-colors'>Contact</a>
-      </div>
-
-      {/* Auth Button */}
-      <div>
-        <Button variant='primary' className='px-7 py-2 rounded-lg'>Log in</Button>
-      </div>
-    </nav>
+    </header>
   );
 }

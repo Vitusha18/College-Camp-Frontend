@@ -1,16 +1,14 @@
-import { Icon } from "@iconify/react";
+import React from 'react';
+import { GraduationCap } from 'lucide-react';
 
 export default function Logo() {
   return (
-    <div className="flex items-center gap-2 cursor-pointer select-none">
-      {/* Icon Container */}
-      <div className="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-sm shadow-blue-500/20">
-        <Icon icon="lucide:graduation-cap" className="w-5 h-5" />
-      </div>
-      {/* Typography */}
-      <span className="text-xl font-bold text-gray-900 tracking-tight">
-        Campus<span className="text-blue-600">Connect</span>
-      </span>
+    <div className="flex items-center gap-2 text-[#2563eb] font-bold text-xl tracking-tight select-none font-sans">
+      {/* Modern graduation cap icon matching the blue theme */}
+      <GraduationCap className="h-7 w-7 stroke-[2.5]" />
+      
+      {/* Brand Name */}
+      <span>Campus Connect</span>
     </div>
   );
 }

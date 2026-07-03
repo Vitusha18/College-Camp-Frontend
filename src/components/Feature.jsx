@@ -1,36 +1,80 @@
 import React from 'react';
-import { Calculator, GraduationCap, Briefcase, Calendar, BookOpen, BarChart3 } from 'lucide-react';
+import { Calculator, Search, Briefcase, Calendar, BookOpen, LayoutDashboard } from 'lucide-react';
 
-export default function Feature() {
-  const features = [
-    { icon: <Calculator className='text-blue-600 w-5 h-5' />, title: 'CGPA Calculator', desc: 'Calculate your CGPA and track your academic performance easily.' },
-    { icon: <GraduationCap className='text-green-600 w-5 h-5' />, title: 'Scholarship Finder', desc: 'Discover scholarships based on your profile and eligibility.', bg: 'bg-green-50' },
-    { icon: <Briefcase className='text-purple-600 w-5 h-5' />, title: 'Internship Finder', desc: 'Find internships from top companies and apply quickly.', bg: 'bg-purple-50' },
-    { icon: <Calendar className='text-amber-500 w-5 h-5' />, title: 'Campus Events', desc: 'Stay updated with workshops, seminars, and college events.', bg: 'bg-amber-50' },
-    { icon: <BookOpen className='text-rose-500 w-5 h-5' />, title: 'Study Planner', desc: 'Plan assignments, deadlines, and study schedules efficiently.', bg: 'bg-rose-50' },
-    { icon: <BarChart3 className='text-cyan-500 w-5 h-5' />, title: 'Student Dashboard', desc: 'View achievements, tasks, analytics, and progress.', bg: 'bg-cyan-50' },
-  ];
-
+export default function Features() {
   return (
-    <section id='features' className='max-w-7xl mx-auto px-8 md:px-16 py-20 border-t border-gray-100/80'>
-      <div className='text-center space-y-3 mb-16'>
-        <p className='text-blue-600 text-sm font-bold tracking-wide uppercase'>Features</p>
-        <h2 className='text-2xl md:text-3xl font-bold text-gray-900'>Everything You Need, All in One Place</h2>
+    <section id="features" className="max-w-7xl mx-auto px-6 py-20">
+      <div className="text-center max-w-2xl mx-auto mb-16">
+        <span className="text-[#2563eb] text-sm font-bold tracking-wider uppercase">Features</span>
+        <h2 className="text-3xl font-bold text-slate-900 mt-2">Everything You Need, All in One Place</h2>
       </div>
 
-      <div className='grid md:grid-cols-3 gap-8'>
-        {features.map((item, index) => (
-          <div key={index} className='bg-white p-8 rounded-xl border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.02)] transition-all hover:translate-y-[-2px] relative group'>
-            {/* Minimalist triple dots asset decoration */}
-            <div className='absolute top-4 right-5 text-gray-300 group-hover:text-blue-400 font-bold transition-colors text-sm tracking-widest'>•••</div>
-            
-            <div className={`w-11 h-11 ${item.bg || 'bg-blue-50'} rounded-lg flex items-center justify-center mb-5 shadow-sm`}>
-              {item.icon}
-            </div>
-            <h3 className='font-bold text-gray-900 text-lg mb-2'>{item.title}</h3>
-            <p className='text-gray-500 text-sm leading-relaxed'>{item.desc}</p>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* Feature 1 */}
+        <div className="bg-white p-8 rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-gray-50 flex items-start gap-4">
+          <div className="p-3 rounded-xl bg-blue-50 text-blue-600 shrink-0">
+            <Calculator className="h-6 w-6" />
           </div>
-        ))}
+          <div>
+            <h3 className="font-bold text-lg text-slate-900 mb-2">CGPA Calculator</h3>
+            <p className="text-gray-500 text-sm leading-relaxed">Calculate your CGPA and track your academic performance easily.</p>
+          </div>
+        </div>
+
+        {/* Feature 2 */}
+        <div className="bg-white p-8 rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-gray-50 flex items-start gap-4">
+          <div className="p-3 rounded-xl bg-green-50 text-green-600 shrink-0">
+            <Search className="h-6 w-6" />
+          </div>
+          <div>
+            <h3 className="font-bold text-lg text-slate-900 mb-2">Scholarship Finder</h3>
+            <p className="text-gray-500 text-sm leading-relaxed">Discover scholarships based on your profile and eligibility.</p>
+          </div>
+        </div>
+
+        {/* Feature 3 */}
+        <div className="bg-white p-8 rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-gray-50 flex items-start gap-4">
+          <div className="p-3 rounded-xl bg-purple-50 text-purple-600 shrink-0">
+            <Briefcase className="h-6 w-6" />
+          </div>
+          <div>
+            <h3 className="font-bold text-lg text-slate-900 mb-2">Internship Finder</h3>
+            <p className="text-gray-500 text-sm leading-relaxed">Find internships from top companies and apply quickly.</p>
+          </div>
+        </div>
+
+        {/* Feature 4 */}
+        <div className="bg-white p-8 rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-gray-50 flex items-start gap-4">
+          <div className="p-3 rounded-xl bg-amber-50 text-amber-600 shrink-0">
+            <Calendar className="h-6 w-6" />
+          </div>
+          <div>
+            <h3 className="font-bold text-lg text-slate-900 mb-2">Campus Events</h3>
+            <p className="text-gray-500 text-sm leading-relaxed">Stay updated with workshops, seminars, and college events.</p>
+          </div>
+        </div>
+
+        {/* Feature 5 */}
+        <div className="bg-white p-8 rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-gray-50 flex items-start gap-4">
+          <div className="p-3 rounded-xl bg-rose-50 text-rose-600 shrink-0">
+            <BookOpen className="h-6 w-6" />
+          </div>
+          <div>
+            <h3 className="font-bold text-lg text-slate-900 mb-2">Study Planner</h3>
+            <p className="text-gray-500 text-sm leading-relaxed">Plan assignments, deadlines, and study schedules efficiently.</p>
+          </div>
+        </div>
+
+        {/* Feature 6 */}
+        <div className="bg-white p-8 rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-gray-50 flex items-start gap-4">
+          <div className="p-3 rounded-xl bg-cyan-50 text-cyan-600 shrink-0">
+            <LayoutDashboard className="h-6 w-6" />
+          </div>
+          <div>
+            <h3 className="font-bold text-lg text-slate-900 mb-2">Student Dashboard</h3>
+            <p className="text-gray-500 text-sm leading-relaxed">View achievements, tasks, analytics, and progress.</p>
+          </div>
+        </div>
       </div>
     </section>
   );
