@@ -1,11 +1,10 @@
 import React from 'react';
 import Sidebar from './Sidebar';
 import Header from './Header';
-import QuickStats from './QuickStats';
+import QuickStats from './QuickStats'; 
 import UpcomingDeadlines from './UpcomingDeadlines';
 import GPAChart from './GPAChart';
 import RecentActivities from './RecentActivities';
-
 const Dashboard = () => {
   return (
     <div className="flex bg-gray-50 min-h-screen font-sans antialiased">
