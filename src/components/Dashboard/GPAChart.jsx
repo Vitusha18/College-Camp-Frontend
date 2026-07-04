@@ -1,89 +1,67 @@
-// import React from 'react';
-// import { TrendingUp } from 'lucide-react';
+import React from 'react';
+import { ChevronDown, ArrowRight } from 'lucide-react';
 
-// export default function GPAChart() {
-//   return (
-//     // Clean, fluid card core contents without double outer card borders
-//     <div className="flex flex-col h-full justify-between w-full min-w-0">
-      
-//       {/* Chart Plot Container Grid Canvas */}
-//       <div className="relative flex-1 w-full min-h-0 flex flex-col justify-between">
-        
-//         {/* SVG Graph Plotting Workspace */}
-//         {/* MATCH: Expanded viewBox scaling and adjusted coordinates to match dash.png line steepness */}
-//         <svg viewBox="0 0 500 240" className="w-full h-full overflow-visible flex-1">
+const GPAChart = () => {
+  return (
+    <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm h-full flex flex-col justify-between">
+      <div>
+        <div className="flex items-center justify-between mb-6">
+          <h4 className="font-bold text-gray-900 text-sm">GPA Trend</h4>
+          <button className="flex items-center gap-1 bg-gray-50 border border-gray-200 text-gray-600 text-[11px] px-2.5 py-1 rounded-lg font-medium">
+            Current Semester <ChevronDown className="w-3 h-3 text-gray-400" />
+          </button>
+        </div>
+
+        {/* Dynamic Graphic Line Render */}
+        <div className="relative h-44 w-full mt-4">
+          <svg viewBox="0 0 500 150" className="w-full h-full overflow-visible">
+            <defs>
+              <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#2563eb" stopOpacity="0.15" />
+                <stop offset="100%" stopColor="#2563eb" stopOpacity="0.0" />
+              </linearGradient>
+            </defs>
+            {/* Grid Lines */}
+            <line x1="0" y1="120" x2="500" y2="120" stroke="#f3f4f6" strokeWidth="1" />
+            <line x1="0" y1="80" x2="500" y2="80" stroke="#f3f4f6" strokeWidth="1" />
+            <line x1="0" y1="40" x2="500" y2="40" stroke="#f3f4f6" strokeWidth="1" />
+            
+            {/* Gradient Area */}
+            <path d="M 40,84 Q 140,74 240,65 T 440,40 L 440,120 L 40,120 Z" fill="url(#chartGradient)" />
+            
+            {/* Trendline */}
+            <path d="M 40,84 Q 140,74 240,65 T 440,40" fill="none" stroke="#2563eb" strokeWidth="2.5" />
+            
+            {/* Point Node Orbs & Data Tags */}
+            <circle cx="40" cy="84" r="4" fill="#2563eb" stroke="#fff" strokeWidth="2" />
+            <text x="40" y="68" textAnchor="middle" className="text-[10px] font-bold fill-gray-900">7.89</text>
+            
+            <circle cx="140" cy="74" r="4" fill="#2563eb" stroke="#fff" strokeWidth="2" />
+            <text x="140" y="58" textAnchor="middle" className="text-[10px] font-bold fill-gray-900">8.12</text>
+            
+            <circle cx="240" cy="65" r="4" fill="#2563eb" stroke="#fff" strokeWidth="2" />
+            <text x="240" y="49" textAnchor="middle" className="text-[10px] font-bold fill-gray-900">8.32</text>
+            
+            <circle cx="440" cy="40" r="4" fill="#2563eb" stroke="#fff" strokeWidth="2" />
+            <text x="440" y="24" textAnchor="middle" className="text-[10px] font-bold fill-gray-900">8.43</text>
+          </svg>
           
-//           {/* Background Grid Accent Lines */}
-//           {[10, 60, 110, 160, 210].map((y, i) => (
-//             <line key={i} x1="35" y1={y} x2="485" y2={y} stroke="#F1F5F9" strokeWidth="1.5" />
-//           ))}
+          {/* Axis Labels */}
+          <div className="flex justify-between text-[11px] font-medium text-gray-400 mt-2 px-6">
+            <span>Jan</span>
+            <span>Feb</span>
+            <span>Mar</span>
+            <span>Apr</span>
+            <span>May</span>
+          </div>
+        </div>
+      </div>
 
-//           {/* Left Y-Axis Metric Labels */}
-//           {[
-//             { y: 10, val: "10" },
-//             { y: 60, val: "8" },
-//             { y: 110, val: "6" },
-//             { y: 160, val: "4" },
-//             { y: 210, val: "2" },
-//             { y: 235, val: "0" }
-//           ].map((axis, i) => (
-//             <text key={i} x="12" y={axis.y + 4} textAnchor="middle" className="text-[11px] font-bold fill-gray-400">
-//               {axis.val}
-//             </text>
-//           ))}
-          
-//           {/* Gradient fill vector shape area beneath chart path */}
-//           <path
-//             d="M 50,100 L 155,90 L 260,70 L 365,55 L 470,35 L 470,235 L 50,235 Z"
-//             fill="url(#chartGradV4)"
-//           />
+      <button className="flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-700 mt-4 transition-all w-fit">
+        Go to GPA Calculator <ArrowRight className="w-3.5 h-3.5" />
+      </button>
+    </div>
+  );
+};
 
-//           {/* Core Graphic Trendline Indicator Vector */}
-//           <path
-//             d="M 50,100 L 155,90 L 260,70 L 365,55 L 470,35"
-//             fill="none"
-//             stroke="#2563EB"
-//             strokeWidth="3.5"
-//             strokeLinecap="round"
-//           />
-
-//           {/* Plot Coordinates Points Badges & Value Strings */}
-//           {[
-//             { x: 50, y: 100, val: '8.20' },
-//             { x: 155, y: 90, val: '8.35' },
-//             { x: 260, y: 70, val: '8.50' },
-//             { x: 365, y: 55, val: '8.60' },
-//             { x: 470, y: 35, val: '8.74' },
-//           ].map((pt, i) => (
-//             <g key={i}>
-//               <circle cx={pt.x} cy={pt.y} r="5.5" fill="#2563EB" stroke="#ffffff" strokeWidth="2.5" className="shadow-sm" />
-//               <text x={pt.x} y={pt.y - 14} textAnchor="middle" className="text-[11px] font-black fill-gray-800">
-//                 {pt.val}
-//               </text>
-//             </g>
-//           ))}
-
-//           {/* Definitions Configuration Layer */}
-//           <defs>
-//             <linearGradient id="chartGradV4" x1="0" y1="0" x2="0" y2="1">
-//               <stop offset="0%" stopColor="#3B82F6" stopOpacity="0.12" />
-//               <stop offset="100%" stopColor="#3B82F6" stopOpacity="0.00" />
-//             </linearGradient>
-//           </defs>
-//         </svg>
-
-//         {/* Horizontal X-Axis Timeline Markers */}
-//         <div className="flex justify-between pl-10 pr-2 text-[11px] font-bold text-gray-400 mt-3 tracking-wide">
-//           <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span>
-//         </div>
-//       </div>
-
-//       {/* Motivational Bottom Feedback Notification Accent */}
-//       <div className="flex items-center gap-2 text-emerald-600 text-xs font-bold mt-5 pt-3 border-t border-gray-50 text-left">
-//         <TrendingUp className="h-4 w-4 stroke-[2.5]" />
-//         <span className="tracking-wide">Good job! Your GPA is improving.</span>
-//       </div>
-
-//     </div>
-//   );
-// }
+export default GPAChart;

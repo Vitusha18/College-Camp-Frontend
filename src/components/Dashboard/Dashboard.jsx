@@ -1,76 +1,50 @@
-// import React, { useState } from 'react';
+import React from 'react';
+import Sidebar from './Sidebar';
+import Header from './Header';
+import QuickStats from './QuickStats';
+import UpcomingDeadlines from './UpcomingDeadlines';
+import GPAChart from './GPAChart';
+import RecentActivities from './RecentActivities';
 
-// import Sidebar from './Sidebar';
-// import Header from './Header';
-// import QuickStats from './QuickStats';
-// import UpcomingDeadlines from './UpcomingDeadlines';
-// import RecentActivities from './RecentActivities';
-// import GPAChart from './GPAChart';
+const Dashboard = () => {
+  return (
+    <div className="flex bg-gray-50 min-h-screen font-sans antialiased">
+      {/* Sidebar Navigation */}
+      <Sidebar />
 
-// export default function Dashboard() {
-//   const [user, setUser] = useState({
-//     name: "", 
-//     course: "B.Tech CSE"
-//   });
+      {/* Main Container */}
+      <div className="flex-1 flex flex-col min-w-0">
+        <Header />
 
-//   return (
-//     // Outer frame set to absolute full-screen layout
-//     <div className="min-h-screen w-full bg-[#F8FAFC] flex relative">
-      
-//       {/* 1. Sidebar - Kept fixed to the left edge */}
-//       <Sidebar />
+        {/* Content Workspace Scroll Wrapper */}
+        <main className="flex-1 p-8 space-y-8 overflow-y-auto max-w-[1400px] w-full mx-auto">
+          {/* Top Hero Greetings Banner */}
+          <div>
+            <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight flex items-center gap-2">
+              Welcome back! 👋
+            </h1>
+            <p className="text-xs text-gray-500 mt-1 font-medium">
+              Here's what's happening on your campus today.
+            </p>
+          </div>
 
-//       {/* 2. Main Content Canvas */}
-//       {/* MATCH: lg:pl-64 gives precise room for the sidebar. w-full and flex-1 ensures it spreads edge-to-edge */}
-//       <div className="flex-1 flex flex-col min-h-screen w-full min-w-0 lg:pl-64">
-        
-//         {/* Top Header - Now it will stretch infinitely to the right edge exactly like dash.png */}
-//         <Header user={user} />
-
-//         {/* Core Workspace Area */}
-//         {/* MATCH: Removed mx-auto. Added standard responsive padding matching the mockup */}
-//         <main className="flex-1 p-6 lg:p-8 space-y-8 w-full text-left">
+          {/* Core App Widgets Grid System */}
+          <QuickStats />
           
-//           {/* Welcome Action Header Banner */}
-//           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 w-full">
-//             <div className="text-left">
-//               <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">
-//                 Welcome back{user.name ? `, ${user.name}` : ''}! 👋
-//               </h1>
-//               <p className="text-sm font-semibold text-gray-400 mt-1">
-//                 Here's what's happening on your campus today.
-//               </p>
-//             </div>
-//             <div className="text-sm font-bold text-gray-500 bg-white border border-gray-100 px-4 py-2 rounded-xl shadow-sm tracking-wide flex items-center gap-2 self-start sm:self-auto">
-//               <span>📅</span> May 24, 2024 &nbsp;|&nbsp; Friday
-//             </div>
-//           </div>
+          <UpcomingDeadlines />
 
-//           {/* Quick Metrics Statistics Row Section */}
-//           <QuickStats />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+            <div className="lg:col-span-1">
+              <GPAChart />
+            </div>
+            <div className="lg:col-span-2">
+              <RecentActivities />
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  );
+};
 
-//           {/* Core Analytics Panels Row Grid */}
-//           <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 items-stretch w-full">
-//             <RecentActivities type="events" />
-//             <UpcomingDeadlines />
-            
-//             {/* GPA Analytic Card Box Container */}
-//             <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm flex flex-col h-[400px] min-w-0 w-full">
-//               <h3 className="text-md font-bold text-gray-900 mb-4">Overall GPA</h3>
-//               <div className="flex-1 w-full h-full relative min-h-0">
-//                 <GPAChart />
-//               </div>
-//             </div>
-//           </div>
-
-//           {/* Secondary Information Layout Row Grid */}
-//           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full">
-//             <RecentActivities type="schedule" />
-//             <RecentActivities type="announcements" />
-//           </div>
-
-//         </main>
-//       </div>
-//     </div>
-//   );
-// }
+export default Dashboard;
