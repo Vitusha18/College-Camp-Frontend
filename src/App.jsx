@@ -1,37 +1,33 @@
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Navbar from "./components/navbar";
+import Footer from "./components/Footer";
 
+// 👇 1. Import your landing components (making sure paths match your project)
+import Home from "./components/Home"; // or wherever Home.jsx lives
 
+// 👇 2. Import your dashboard component
+import Dashboard from "./components/Dashboard/Dashboard"; 
 
-  import React, { useState } from 'react'; // 👈 Added 'useState' import here!
+export default function App() {
+  return (
+    <Router>
+      <div className="min-h-screen bg-[#f8fafc] text-gray-900 font-sans flex flex-col justify-between">
+        {/* Navbar stays at the top across landing routes */}
+        <Navbar />
 
-  // 👇 Ensured all your landing page component imports are present
-  import Navbar from './components/navbar';
-  import Hero from './components/Hero';
-  import Features from './components/Feature';
-  import WhyChooseUs from './components/WhyChooseUs';
-  import CtaBanner from './components/Cta';
-  import Footer from './components/Footer';
-  
-  // Your dashboard main folder component import
-  import Dashboard from './components/Dashboard/Dashboard';
-  
-  export default function App() {
-    const [view, setView] = useState('landing');
-  
-    if (view === 'dashboard') {
-      return <Dashboard />;
-    }
-  
-    return (
-      <div className="min-h-screen bg-[#f8fafc] text-gray-900 font-sans">
-        {/* Pass the state changer function into your Navbar */}
-        <Navbar onLogin={() => setView('dashboard')} />
-        <Hero />
-        <hr className="border-gray-100" />
-        <Features />
-        <hr className="border-gray-100" />
-        <WhyChooseUs />
-        <CtaBanner />
+        <main className="flex-grow">
+          <Routes>
+            {/* The main landing page */}
+            <Route path="/" element={<Home />} />
+            
+            {/* 👇 3. Add the secure path route to your Dashboard! */}
+            <Route path="/dashboard" element={<Dashboard />} />
+          </Routes>
+        </main>
+
         <Footer />
       </div>
-    );
-  }
+    </Router>
+  );
+}
