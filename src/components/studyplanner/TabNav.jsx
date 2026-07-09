@@ -11,6 +11,7 @@ export default function TabNav() {
   ];
 
   return (
+    // <div className="flex border-b border-gray-100 my-6 overflow-x-auto gap-2">
     <div className="flex border-b border-gray-100 my-6 overflow-x-auto gap-2">
       {tabs.map((tab) => (
         <NavLink
