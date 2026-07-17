@@ -52,9 +52,73 @@
 
 // export default Sidebar;
 
+//current code 
+// import React from 'react';
+// import { NavLink } from 'react-router-dom'; // 👈 Swapped useNavigate for declarative Link state tracking
+// import Logo from '../Logo'; 
+// import { 
+//   LayoutDashboard, User, BookOpen, Calendar, 
+//   Briefcase, GraduationCap, Bell, Settings 
+// } from 'lucide-react';
 
+// const Sidebar = () => {
+//   // Configured distinct target route paths matching your App.jsx layout map
+//   const menuItems = [
+//     { name: 'Dashboard', icon: LayoutDashboard, path: '/dashboard' },
+//     { name: 'Profile', icon: User, path: '/profile' },
+//     { name: 'Course', icon: BookOpen, path: '/course' },
+//     { name: 'Study Planner', icon: Calendar, path: '/planner' }, // 🚀 Points straight to your planner layout
+//     { name: 'Internship', icon: Briefcase, path: '/internship' },
+//     { name: 'Scholarship', icon: GraduationCap, path: '/scholarship' },
+//     { name: 'Notification', icon: Bell, path: '/notifications' },
+//     { name: 'Settings', icon: Settings, path: '/settings' },
+//   ];
+
+//   return (
+//     <aside className="w-64 bg-white border-r border-gray-100 min-h-screen flex flex-col justify-between p-4 sticky top-0">
+//       <div>
+//         {/* Clickable corporate identity logo leading back out to root shell */}
+//         <NavLink to="/" className="block px-3 py-4 mb-4">
+//           <Logo />
+//         </NavLink>
+
+//         {/* Dynamic Client Navigation System Grid */}
+//         <nav className="space-y-1">
+//           {menuItems.map((item) => {
+//             const Icon = item.icon;
+//             return (
+//               <NavLink
+//                 key={item.name}
+//                 to={item.path}
+//                 className={({ isActive }) =>
+//                   `w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
+//                     isActive
+//                       ? 'bg-blue-50 text-blue-600'
+//                       : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'
+//                   }`
+//                 }
+//               >
+//                 {({ isActive }) => (
+//                   <>
+//                     <Icon className={`w-5 h-5 ${isActive ? 'text-blue-600' : 'text-gray-400'}`} />
+//                     {item.name}
+//                   </>
+//                 )}
+//               </NavLink>
+//             );
+//           })}
+//         </nav>
+//       </div>
+//     </aside>
+//   );
+// };
+
+// export default Sidebar;
+
+
+//update code 
 import React from 'react';
-import { NavLink } from 'react-router-dom'; // 👈 Swapped useNavigate for declarative Link state tracking
+import { NavLink } from 'react-router-dom';
 import Logo from '../Logo'; 
 import { 
   LayoutDashboard, User, BookOpen, Calendar, 
@@ -62,12 +126,11 @@ import {
 } from 'lucide-react';
 
 const Sidebar = () => {
-  // Configured distinct target route paths matching your App.jsx layout map
   const menuItems = [
     { name: 'Dashboard', icon: LayoutDashboard, path: '/dashboard' },
     { name: 'Profile', icon: User, path: '/profile' },
-    { name: 'Course', icon: BookOpen, path: '/course' },
-    { name: 'Study Planner', icon: Calendar, path: '/planner' }, // 🚀 Points straight to your planner layout
+    { name: 'Course', icon: BookOpen, path: '/planner/subjects' }, // 👈 Updated to match your courses/subjects route
+    { name: 'Study Planner', icon: Calendar, path: '/planner' }, 
     { name: 'Internship', icon: Briefcase, path: '/internship' },
     { name: 'Scholarship', icon: GraduationCap, path: '/scholarship' },
     { name: 'Notification', icon: Bell, path: '/notifications' },
@@ -77,12 +140,12 @@ const Sidebar = () => {
   return (
     <aside className="w-64 bg-white border-r border-gray-100 min-h-screen flex flex-col justify-between p-4 sticky top-0">
       <div>
-        {/* Clickable corporate identity logo leading back out to root shell */}
+        {/* Brand Logo */}
         <NavLink to="/" className="block px-3 py-4 mb-4">
           <Logo />
         </NavLink>
 
-        {/* Dynamic Client Navigation System Grid */}
+        {/* Navigation Menu */}
         <nav className="space-y-1">
           {menuItems.map((item) => {
             const Icon = item.icon;

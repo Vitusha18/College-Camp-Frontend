@@ -1,313 +1,299 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
-  Plus, 
-  X, 
-  BookOpen, 
-  Tag, 
-  Trash2, 
-  Filter, 
-  AlertCircle,
-  Percent,
-  CheckCircle2
+  BookOpen, Search, Plus, ChevronRight, 
+  CheckCircle2, Clock, Award, X, Trash2
 } from 'lucide-react';
+import { allCourses as initialCourses } from '../../Data/coursesData';
 
 export default function Subjects() {
-  const [semesterFilter, setSemesterFilter] = useState('All');
+  const navigate = useNavigate();
+  
+  // CHANGED: Moved courses into React state so user additions & deletions persist
+  const [courses, setCourses] = useState(initialCourses);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [activeCourseModal, setActiveCourseModal] = useState(null);
 
-  // Modal State
-  const [isAddSubjectOpen, setIsAddSubjectOpen] = useState(false);
-  const [newSubName, setNewSubName] = useState('');
-  const [newSubCode, setNewSubCode] = useState('');
-  const [newSubSemester, setNewSubSemester] = useState('Spring 2026');
-  const [newSubProgress, setNewSubProgress] = useState(45);
-  const [newSubColorType, setNewSubColorType] = useState('indigo');
+  // State for Add Course / Subject Form Modal
+  const [isAddingCourse, setIsAddingCourse] = useState(false);
+  const [newTitle, setNewTitle] = useState('');
+  const [newCode, setNewCode] = useState('');
+  const [newCategory, setNewCategory] = useState('Computer Science');
+  const [newInstructor, setNewInstructor] = useState('');
+  const [newSchedule, setNewSchedule] = useState('Mon, Wed (10:00 AM)');
 
-  const colorThemeMap = {
-    indigo: { badge: 'bg-indigo-50 border-indigo-200 text-indigo-900', dot: 'bg-indigo-500', bgClass: 'bg-indigo-500', bar: 'bg-indigo-600' },
-    emerald: { badge: 'bg-emerald-50 border-emerald-200 text-emerald-900', dot: 'bg-emerald-500', bgClass: 'bg-emerald-500', bar: 'bg-emerald-500' },
-    amber: { badge: 'bg-amber-50 border-amber-200 text-amber-900', dot: 'bg-amber-400', bgClass: 'bg-amber-400', bar: 'bg-amber-500' },
-    purple: { badge: 'bg-purple-50 border-purple-200 text-purple-900', dot: 'bg-purple-500', bgClass: 'bg-purple-500', bar: 'bg-purple-600' },
-    sky: { badge: 'bg-sky-50 border-sky-200 text-sky-900', dot: 'bg-sky-500', bgClass: 'bg-sky-500', bar: 'bg-sky-500' }
-  };
+  const categories = ['All', 'Computer Science', 'Mathematics', 'General', 'Elective'];
 
-  const [subjects, setSubjects] = useState([
-    {
-      id: 1,
-      name: 'Data Structures & Algorithms',
-      code: 'CS 201',
-      semester: 'Spring 2026',
-      progress: 68,
-      color: 'bg-emerald-50 border-emerald-200 text-emerald-900',
-      dotColor: 'bg-emerald-500',
-      progressBar: 'bg-emerald-500'
-    },
-    {
-      id: 2,
-      name: 'Computer Architecture',
-      code: 'CS 250',
-      semester: 'Spring 2026',
-      progress: 42,
-      color: 'bg-indigo-50 border-indigo-200 text-indigo-900',
-      dotColor: 'bg-indigo-500',
-      progressBar: 'bg-indigo-600'
-    },
-    {
-      id: 3,
-      name: 'Discrete Mathematics',
-      code: 'CS 215',
-      semester: 'Spring 2026',
-      progress: 85,
-      color: 'bg-amber-50 border-amber-200 text-amber-900',
-      dotColor: 'bg-amber-400',
-      progressBar: 'bg-amber-500'
-    },
-    {
-      id: 4,
-      name: 'Database Systems',
-      code: 'CS 310',
-      semester: 'Spring 2026',
-      progress: 30,
-      color: 'bg-sky-50 border-sky-200 text-sky-900',
-      dotColor: 'bg-sky-500',
-      progressBar: 'bg-sky-500'
-    }
-  ]);
-
-  const handleAddSubjectSubmit = (e) => {
-    e.preventDefault();
-    if (!newSubName.trim()) return;
-
-    const chosenTheme = colorThemeMap[newSubColorType] || colorThemeMap.indigo;
-
-    const newSubject = {
-      id: Date.now(),
-      name: newSubName,
-      code: newSubCode || 'CS 101',
-      semester: newSubSemester,
-      progress: Number(newSubProgress) || 0,
-      color: chosenTheme.badge,
-      dotColor: chosenTheme.dot,
-      progressBar: chosenTheme.bar
-    };
-
-    setSubjects([newSubject, ...subjects]);
-    setNewSubName('');
-    setNewSubCode('');
-    setNewSubProgress(45);
-    setIsAddSubjectOpen(false);
-  };
-
-  const handleDeleteSubject = (id) => {
-    setSubjects(subjects.filter(sub => sub.id !== id));
-  };
-
-  const filteredSubjects = subjects.filter(sub => {
-    if (semesterFilter === 'All') return true;
-    return sub.semester === semesterFilter;
+  // Filter logic based on search & category
+  const filteredCourses = courses.filter(course => {
+    const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                          course.code.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = selectedCategory === 'All' || course.category === selectedCategory;
+    return matchesSearch && matchesCategory;
   });
 
+  // Calculate live stats
+  const totalEnrolled = courses.length;
+  const completedCount = courses.filter(c => c.progress === 100).length;
+  const avgProgress = totalEnrolled > 0 ? Math.round(courses.reduce((acc, curr) => acc + curr.progress, 0) / totalEnrolled) : 0;
+
+  // Handler to add a new course/subject
+  const handleAddCourseSubmit = (e) => {
+    e.preventDefault();
+    if (!newTitle.trim() || !newCode.trim()) return;
+
+    const newEntry = {
+      id: Date.now(),
+      title: newTitle,
+      code: newCode.toUpperCase(),
+      category: newCategory,
+      progress: 0,
+      totalModules: 10,
+      completedModules: 0,
+      instructor: newInstructor || 'TBD',
+      schedule: newSchedule,
+      icon: BookOpen,
+      iconColor: 'text-blue-500 bg-blue-50',
+      progressColor: 'bg-blue-600',
+      status: 'Just Added'
+    };
+
+    setCourses([newEntry, ...courses]);
+    setNewTitle('');
+    setNewCode('');
+    setNewInstructor('');
+    setIsAddingCourse(false);
+  };
+
+  // Handler to delete a course/subject
+  const handleDeleteCourse = (id, e) => {
+    e.stopPropagation(); // Prevents opening the detail modal when clicking delete
+    setCourses(courses.filter(course => course.id !== id));
+  };
+
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-800">
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 relative">
-        
-        {/* Header Section */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
-          <div>
-            <h1 className="text-3xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
-              <BookOpen className="w-8 h-8 text-indigo-600" /> Subjects Directory
-            </h1>
-            <p className="text-slate-500 text-sm mt-1">Track your course progression and study completion rates.</p>
+    <div className="space-y-8 mt-4 pb-12">
+      
+      {/* HEADER SECTION */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
+        <div className="space-y-1">
+          <h1 className="text-2xl font-black text-gray-900 tracking-tight flex items-center gap-2">
+            <span className="p-2 bg-blue-50 text-blue-600 rounded-xl">📘</span> My Enrolled Courses
+          </h1>
+          <p className="text-xs font-medium text-gray-400">Track your curriculum progress, view schedules, and manage subjects.</p>
+        </div>
+        <button 
+          onClick={() => setIsAddingCourse(!isAddingCourse)} 
+          className="flex items-center justify-center gap-1.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 px-4 py-2.5 rounded-xl transition shadow-sm cursor-pointer"
+        >
+          <Plus className="w-4 h-4" /> {isAddingCourse ? 'Close Form' : 'Add Subject'}
+        </button>
+      </div>
+
+      {/* ADD COURSE FORM MODAL / EXPANDABLE PANEL */}
+      {isAddingCourse && (
+        <form onSubmit={handleAddCourseSubmit} className="bg-white border border-blue-100 p-6 rounded-3xl shadow-sm space-y-4 animate-in fade-in duration-200">
+          <div className="flex justify-between items-center">
+            <h3 className="text-sm font-black text-blue-700">Add a New Course / Subject</h3>
+            <button type="button" onClick={() => setIsAddingCourse(false)} className="text-gray-400 hover:text-gray-600 cursor-pointer">
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input 
+              type="text" 
+              placeholder="Course Title (e.g., Artificial Intelligence)" 
+              value={newTitle}
+              onChange={(e) => setNewTitle(e.target.value)}
+              className="text-xs font-medium p-3 bg-slate-50 border border-gray-200 rounded-xl outline-none focus:border-blue-500"
+              required
+            />
+            <input 
+              type="text" 
+              placeholder="Course Code (e.g., CS-404)" 
+              value={newCode}
+              onChange={(e) => setNewCode(e.target.value)}
+              className="text-xs font-medium p-3 bg-slate-50 border border-gray-200 rounded-xl outline-none focus:border-blue-500"
+              required
+            />
+            <input 
+              type="text" 
+              placeholder="Instructor Name" 
+              value={newInstructor}
+              onChange={(e) => setNewInstructor(e.target.value)}
+              className="text-xs font-medium p-3 bg-slate-50 border border-gray-200 rounded-xl outline-none focus:border-blue-500"
+            />
+            <select 
+              value={newCategory}
+              onChange={(e) => setNewCategory(e.target.value)}
+              className="text-xs font-medium p-3 bg-slate-50 border border-gray-200 rounded-xl outline-none focus:border-blue-500"
+            >
+              <option value="Computer Science">Computer Science</option>
+              <option value="Mathematics">Mathematics</option>
+              <option value="General">General</option>
+              <option value="Elective">Elective</option>
+            </select>
           </div>
 
-          <button 
-            onClick={() => setIsAddSubjectOpen(true)}
-            className="flex items-center justify-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-sm transition cursor-pointer self-start md:self-auto"
-          >
-            <Plus className="w-4 h-4" />
-            <span>Add Subject</span>
+          <button type="submit" className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl transition cursor-pointer">
+            Save Course
           </button>
-        </div>
+        </form>
+      )}
 
-        {/* Semester Filter Bar */}
-        <div className="flex items-center justify-between gap-4 mb-6 bg-white p-3 rounded-2xl border border-slate-200/80 shadow-xs">
-          <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0">
-            <span className="text-xs font-semibold text-slate-400 flex items-center gap-1 shrink-0 pl-1">
-              <Filter className="w-3.5 h-3.5" /> Semester:
-            </span>
-            {['All', 'Spring 2026', 'Fall 2026'].map((sem) => (
-              <button
-                key={sem}
-                onClick={() => setSemesterFilter(sem)}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold border transition cursor-pointer whitespace-nowrap ${
-                  semesterFilter === sem 
-                    ? 'bg-slate-900 text-white border-slate-900' 
-                    : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
-                }`}
-              >
-                {sem}
-              </button>
-            ))}
+      {/* STATS OVERVIEW CARDS */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="bg-white p-5 rounded-3xl border border-gray-100 shadow-sm flex items-center gap-4">
+          <div className="p-3 bg-blue-50 text-blue-600 rounded-2xl"><BookOpen className="w-6 h-6" /></div>
+          <div>
+            <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">Active Subjects</span>
+            <h3 className="text-2xl font-black text-gray-900">{totalEnrolled}</h3>
           </div>
-          <span className="text-xs font-semibold bg-slate-100 px-3 py-1 rounded-full text-slate-600 hidden sm:inline-block">
-            {filteredSubjects.length} {filteredSubjects.length === 1 ? 'subject' : 'subjects'}
-          </span>
         </div>
 
-        {/* Subjects Card Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredSubjects.length === 0 ? (
-            <div className="col-span-full flex flex-col items-center justify-center py-16 bg-white rounded-2xl border border-slate-200/80 text-center text-slate-400">
-              <AlertCircle className="w-10 h-10 mb-2 opacity-40 text-indigo-600" />
-              <p className="text-sm font-medium">No subjects found for this semester filter.</p>
-            </div>
-          ) : (
-            filteredSubjects.map((sub) => (
+        <div className="bg-white p-5 rounded-3xl border border-gray-100 shadow-sm flex items-center gap-4">
+          <div className="p-3 bg-emerald-50 text-emerald-600 rounded-2xl"><Award className="w-6 h-6" /></div>
+          <div>
+            <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">Avg. Completion</span>
+            <h3 className="text-2xl font-black text-gray-900">{avgProgress}%</h3>
+          </div>
+        </div>
+
+        <div className="bg-white p-5 rounded-3xl border border-gray-100 shadow-sm flex items-center gap-4">
+          <div className="p-3 bg-purple-50 text-purple-600 rounded-2xl"><CheckCircle2 className="w-6 h-6" /></div>
+          <div>
+            <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">Fully Completed</span>
+            <h3 className="text-2xl font-black text-gray-900">{completedCount}</h3>
+          </div>
+        </div>
+      </div>
+
+      {/* FILTER & SEARCH BAR */}
+      <div className="bg-white p-4 rounded-3xl border border-gray-100 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="flex items-center gap-1.5 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 scrollbar-none">
+          {categories.map((cat, idx) => (
+            <button
+              key={idx}
+              onClick={() => setSelectedCategory(cat)}
+              className={`text-xs font-bold px-4 py-2 rounded-xl transition whitespace-nowrap cursor-pointer ${
+                selectedCategory === cat ? 'bg-blue-600 text-white shadow-sm' : 'bg-slate-50 text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+
+        <div className="relative w-full md:w-72">
+          <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <input 
+            type="text" 
+            placeholder="Search courses or code..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full text-xs font-medium pl-10 pr-4 py-2.5 bg-slate-50 border border-gray-200 rounded-2xl outline-none focus:border-blue-500 transition"
+          />
+        </div>
+      </div>
+
+      {/* COURSES GRID */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredCourses.length > 0 ? (
+          filteredCourses.map((course) => {
+            const IconComponent = course.icon || BookOpen;
+            return (
               <div 
-                key={sub.id} 
-                className={`border rounded-2xl p-5 shadow-xs transition-all flex flex-col justify-between gap-4 ${sub.color}`}
+                key={course.id} 
+                className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm hover:border-blue-200 transition flex flex-col justify-between space-y-6 group relative"
               >
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 bg-white/70 rounded-md">
-                      {sub.code}
-                    </span>
-                    <span className={`w-2.5 h-2.5 rounded-full ${sub.dotColor}`}></span>
-                  </div>
-                  <h3 className="text-base font-bold tracking-tight mb-3">{sub.name}</h3>
-                  
-                  {/* Progress Indicator */}
-                  <div className="bg-white/60 p-3 rounded-xl border border-black/5 space-y-1.5">
-                    <div className="flex items-center justify-between text-xs font-bold">
-                      <span className="flex items-center gap-1 opacity-80"><CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Study Completed</span>
-                      <span>{sub.progress}%</span>
-                    </div>
-                    <div className="w-full bg-slate-200/70 h-2 rounded-full overflow-hidden">
-                      <div 
-                        className={`h-full rounded-full transition-all duration-500 ${sub.progressBar || 'bg-indigo-600'}`} 
-                        style={{ width: `${Math.min(Math.max(sub.progress, 0), 100)}%` }}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between pt-2 border-t border-black/5 text-[11px] font-semibold">
-                  <span className="opacity-75">{sub.semester}</span>
-                  <button 
-                    onClick={() => handleDeleteSubject(sub.id)}
-                    className="text-rose-500 hover:text-rose-700 p-1.5 rounded-lg hover:bg-white/50 transition cursor-pointer flex items-center gap-1"
-                    title="Delete Subject"
-                  >
-                    <Trash2 className="w-4 h-4" /> Delete
-                  </button>
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-
-        {/* Add Subject Modal */}
-        {isAddSubjectOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs px-4">
-            <div className="bg-white w-full max-w-md rounded-3xl border border-slate-100 shadow-2xl p-6 space-y-5 animate-in fade-in zoom-in duration-200">
-              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-                  <span className="p-1.5 bg-indigo-50 text-indigo-600 rounded-xl">📚</span> Add New Subject
-                </h3>
-                <button onClick={() => setIsAddSubjectOpen(false)} className="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg cursor-pointer">
-                  <X className="w-5 h-5" />
+                {/* Delete Button on Card Top Right */}
+                <button 
+                  onClick={(e) => handleDeleteCourse(course.id, e)}
+                  title="Delete Course"
+                  className="absolute top-5 right-5 text-gray-300 hover:text-red-500 bg-slate-50 hover:bg-red-50 p-2 rounded-xl transition cursor-pointer"
+                >
+                  <Trash2 className="w-4 h-4" />
                 </button>
+
+                <div className="space-y-4">
+                  <div className="flex items-start justify-between pr-8">
+                    <div className={`p-3 rounded-2xl ${course.iconColor || 'text-blue-500 bg-blue-50'}`}>
+                      <IconComponent className="w-6 h-6" />
+                    </div>
+                    <span className="text-[10px] font-extrabold uppercase tracking-wider px-3 py-1 bg-slate-100 text-gray-500 rounded-full">{course.code}</span>
+                  </div>
+                  <div className="space-y-1">
+                    <h3 className="text-base font-bold text-gray-900 group-hover:text-blue-600 transition leading-snug">{course.title}</h3>
+                    <p className="text-xs text-gray-400 font-medium">Instructor: {course.instructor}</p>
+                  </div>
+                </div>
+
+                <div className="space-y-4 pt-2 border-t border-gray-50">
+                  <div className="flex items-center text-xs text-gray-500 font-medium gap-1.5">
+                    <Clock className="w-3.5 h-3.5 text-gray-400" />
+                    <span>{course.schedule}</span>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <div className="flex items-center justify-between text-xs font-bold">
+                      <span className="text-gray-500">Progress</span>
+                      <span className="text-gray-800">{course.progress}%</span>
+                    </div>
+                    <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                      <div className={`h-full ${course.progressColor || 'bg-blue-600'}`} style={{ width: `${course.progress}%` }} />
+                    </div>
+                  </div>
+
+                  <button 
+                    onClick={() => setActiveCourseModal(course)}
+                    className="w-full py-2.5 bg-blue-50 hover:bg-blue-600 text-blue-600 hover:text-white text-xs font-bold rounded-xl transition flex items-center justify-center gap-1 cursor-pointer"
+                  >
+                    View Modules <ChevronRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
               </div>
-
-              <form onSubmit={handleAddSubjectSubmit} className="space-y-4 text-xs font-semibold">
-                <div className="space-y-1.5">
-                  <label className="text-slate-600 flex items-center gap-1.5"><Tag className="w-3.5 h-3.5 text-indigo-600" /> Subject Name</label>
-                  <input 
-                    type="text" 
-                    placeholder="e.g. Operating Systems" 
-                    value={newSubName}
-                    onChange={(e) => setNewSubName(e.target.value)}
-                    className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium outline-none focus:border-indigo-600"
-                    required
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-1.5">
-                    <label className="text-slate-600">Course Code</label>
-                    <input 
-                      type="text" 
-                      placeholder="e.g. CS 325" 
-                      value={newSubCode}
-                      onChange={(e) => setNewSubCode(e.target.value)}
-                      className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium outline-none focus:border-indigo-600"
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <label className="text-slate-600">Semester Term</label>
-                    <input 
-                      type="text" 
-                      placeholder="e.g. Spring 2026" 
-                      value={newSubSemester}
-                      onChange={(e) => setNewSubSemester(e.target.value)}
-                      className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium outline-none focus:border-indigo-600"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-slate-600 flex items-center gap-1"><Percent className="w-3 h-3 text-indigo-600" /> Study Completed %</label>
-                  <input 
-                    type="number" 
-                    min="0" 
-                    max="100" 
-                    value={newSubProgress}
-                    onChange={(e) => setNewSubProgress(e.target.value)}
-                    className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium outline-none focus:border-indigo-600"
-                    required
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-slate-600 block">Theme Highlight Color</label>
-                  <div className="flex items-center gap-3 py-1">
-                    {Object.keys(colorThemeMap).map((colorKey) => {
-                      const theme = colorThemeMap[colorKey];
-                      const isSelected = newSubColorType === colorKey;
-                      return (
-                        <button
-                          key={colorKey}
-                          type="button"
-                          onClick={() => setNewSubColorType(colorKey)}
-                          className={`w-8 h-8 rounded-xl ${theme.bgClass} cursor-pointer transition transform hover:scale-105 flex items-center justify-center ${
-                            isSelected ? 'ring-2 ring-indigo-600 ring-offset-2 scale-110 shadow-xs' : 'opacity-70 hover:opacity-100'
-                          }`}
-                        />
-                      );
-                    })}
-                  </div>
-                </div>
-
-                <div className="pt-2 flex gap-3">
-                  <button 
-                    type="button" 
-                    onClick={() => setIsAddSubjectOpen(false)}
-                    className="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-xs font-bold transition cursor-pointer"
-                  >
-                    Cancel
-                  </button>
-                  <button 
-                    type="submit" 
-                    className="flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition shadow-sm cursor-pointer"
-                  >
-                    Save Subject
-                  </button>
-                </div>
-              </form>
-            </div>
+            );
+          })
+        ) : (
+          <div className="col-span-full py-16 text-center space-y-2 bg-white rounded-3xl border border-gray-100">
+            <p className="text-sm font-bold text-gray-700">No courses found matching "{searchQuery}"</p>
           </div>
         )}
+      </div>
 
-      </main>
+      {/* DETAIL MODAL */}
+      {activeCourseModal && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4 z-50">
+          <div className="bg-white max-w-lg w-full p-6 rounded-3xl shadow-xl space-y-6 relative">
+            <button onClick={() => setActiveCourseModal(null)} className="absolute top-5 right-5 text-gray-400 hover:text-gray-600 p-1.5 rounded-full bg-slate-50 cursor-pointer">
+              <X className="w-4 h-4" />
+            </button>
+
+            <div className="space-y-2">
+              <span className="text-[10px] font-black uppercase text-blue-600 bg-blue-50 px-2.5 py-1 rounded-lg">{activeCourseModal.code} • {activeCourseModal.category}</span>
+              <h2 className="text-xl font-black text-gray-900">{activeCourseModal.title}</h2>
+              <p className="text-xs text-gray-400 font-medium">Taught by {activeCourseModal.instructor}</p>
+            </div>
+
+            <div className="bg-slate-50 p-4 rounded-2xl space-y-3">
+              <span className="text-xs font-bold text-gray-700 block">Curriculum Summary</span>
+              <div className="flex justify-between text-xs text-gray-500 font-medium">
+                <span>Completed Modules: {activeCourseModal.completedModules} of {activeCourseModal.totalModules}</span>
+                <span className="font-bold text-blue-600">{activeCourseModal.progress}% Done</span>
+              </div>
+              <div className="w-full bg-gray-200 h-2 rounded-full overflow-hidden">
+                <div className="bg-blue-600 h-full" style={{ width: `${activeCourseModal.progress}%` }} />
+              </div>
+            </div>
+
+            <button onClick={() => setActiveCourseModal(null)} className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl transition cursor-pointer">
+              Close Details
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
