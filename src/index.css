@@ -1,40 +1,52 @@
 @import "tailwindcss";
 
-@theme {
-  --font-family: "Plus Jakarta Sans", sans-serif;
-  --color-background-custom: #f8faff;
-  --color-text-custom: #1e293b;
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Global Dark Mode Fallbacks - Ensures the legacy Light Mode UI seamlessly transitions */
+.dark body {
+  background-color: #0f172a; 
+  color: #f8fafc; 
 }
 
-body {
-  background-color: var(--color-background-custom);
-  color: var(--color-text-custom);
-  font-family: sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-@import "tailwindcss";
-
-@theme {
-  --color-background-custom: #f8faff;
-  --color-text-custom: #1e293b;
+/* Custom mapping for legacy light mode classes to dark equivalents */
+.dark .bg-white {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
 }
 
-#root {
-  width: 100%;
-  min-height: 100%;
-}
-* {
-  margin: 10;
-  padding: 3;
-  
+.dark .bg-slate-50 { background-color: #0c1222 !important; }
+.dark .bg-slate-100 { background-color: #1e293b !important; }
+.dark .bg-slate-200 { background-color: #334155 !important; }
+
+.dark .text-slate-900, 
+.dark .text-slate-800 { color: #f8fafc !important; }
+
+.dark .text-slate-700,
+.dark .text-slate-600 { color: #e2e8f0 !important; }
+.dark .text-slate-500 { color: #94a3b8 !important; }
+
+.dark .border-slate-100,
+.dark .border-slate-200 { border-color: #334155 !important; }
+.dark .border-slate-300 { border-color: #475569 !important; }
+
+.dark .light-theme {
+  color-scheme: light;
+  color: #0f172a;
 }
 
-body {
-  font-family: "Plus Jakarta Sans", sans-serif;
-  background-color: var(--color-background-custom);
-  color: var(--color-text-custom);
-  font-family: sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-} 
+.dark .light-theme .bg-white {
+  background-color: #fff !important;
+  border-color: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+.dark .light-theme .bg-slate-50 { background-color: #f8fafc !important; }
+.dark .light-theme .text-slate-900,
+.dark .light-theme .text-slate-800 { color: #0f172a !important; }
+.dark .light-theme .text-slate-700,
+.dark .light-theme .text-slate-600 { color: #334155 !important; }
+.dark .light-theme .text-slate-500,
+.dark .light-theme .text-slate-400 { color: #64748b !important; }
+.dark .light-theme .border-slate-100,
+.dark .light-theme .border-slate-200 { border-color: #e2e8f0 !important; }
